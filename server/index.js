@@ -9,7 +9,12 @@ app.get("/", (req, res) => {
   res.send("server start");
 });
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://food-ordering-website-tau.vercel.app",
+    credentials: true,
+  })
+);
 
 // For Restaurant API
 app.get("/api/restaurants", async (req, res) => {
