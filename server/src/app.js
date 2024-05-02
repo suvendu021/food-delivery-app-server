@@ -1,20 +1,23 @@
 import express from "express";
-import "dotenv/config";
 import cors from "cors";
+import cookieParser from "cookie-parser";
 import fetch from "cross-fetch";
+import { userRouter } from "./router/user.router.js";
 
 const app = express();
 
-app.get("/", (req, res) => {
-  res.send("server start");
-});
-
 app.use(
   cors({
-    origin: "https://food-ordering-website-tau.vercel.app",
+    origin: process.env.CORS_ORIGIN,
     credentials: true,
   })
 );
+
+app.use(express.urlencoded({ extended: true, limit: "12kb" }));
+
+app.use(express.json({ limit: "12kb" }));
+
+app.use(cookieParser());
 
 // For Restaurant API
 app.get("/api/restaurants", async (req, res) => {
@@ -94,7 +97,6 @@ app.get("/api/menu/:restaurantId", async (req, res) => {
   }
 });
 
-const port = process.env.PORT;
-app.listen(port, () => {
-  console.log("server is running at", port);
-});
+app.use("/api/v1/user", userRouter);
+
+export { app };
